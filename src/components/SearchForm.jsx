@@ -20,17 +20,29 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchForm({ message, title }) {
+export default function SearchForm({ props, message, title, addResumeHandler }) {
     const classes = useStyles();
     const [value, setValue] = useState('');
 
-    const handleChange = (event) => {
-        setValue(event.target.value);
+    const handleChange = (e) => {
+        setValue(e.target.value);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (value) {
+            addResumeHandler(value);
+            setValue('');
+            console.log(value);
+            // props.history.push('/convertation');
+        } else {
+            alert(`Поле ввода не заполнено. Введите ${title}.`);
+        }
     };
 
     return (
         <div className={classes.myForm}>
-            <FormControl fullWidth className={classes.FormControl}>
+            <FormControl fullWidth className={classes.FormControl} required>
                 <Grid container spacing={1}>
                     <Grid item xs={10}>
                         <InputLabel htmlFor='standard-adornment-amount'>{message}</InputLabel>
@@ -44,7 +56,12 @@ export default function SearchForm({ message, title }) {
                     </Grid>
 
                     <Grid item xs={2}>
-                        <Button variant='contained' color='primary' className={classes.button}>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            className={classes.button}
+                            onClick={(e) => handleSubmit(e)}
+                        >
                             Загрузить резюме
                         </Button>
                     </Grid>

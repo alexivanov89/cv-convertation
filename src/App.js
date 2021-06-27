@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { AppBar, Container, Toolbar, makeStyles, Tabs, Tab, Grid, Paper } from '@material-ui/core';
-import { BrowserRouter as Router, Route, Switch, Link } from 'react-router-dom';
-import { createMuiTheme } from '@material-ui/core/styles';
+import { BrowserRouter as Router, Route, Redirect, Switch, Link } from 'react-router-dom';
 
 import ConvertationResume from './pages/ConvertationResume';
 import SearchByID from './pages/SearchByID';
@@ -42,6 +41,7 @@ function App() {
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
+
     return (
         <>
             <Router>
@@ -84,10 +84,11 @@ function App() {
                         </Route>
 
                         <Switch>
-                            <Route path='/' exact component={SearchByID}></Route>
+                            <Route exact path='/' render={(props) => <SearchByID {...props} />}></Route>
                             <Route path='/searchbylink' component={SearchByLink}></Route>
                             <Route path='/convertation' component={ConvertationResume}></Route>
                             <Route path='/download' component={DownloadResume}></Route>
+                            <Redirect to='/' />
                         </Switch>
                     </Paper>
                 </Container>

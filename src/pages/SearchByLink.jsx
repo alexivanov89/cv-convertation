@@ -1,27 +1,37 @@
-import React from 'react';
-import { makeStyles, Grid, Paper } from '@material-ui/core';
+import React, { useState } from 'react';
 import SearchForm from '../components/SearchForm';
+import api from '../utils/api';
 
-/* const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        direction: 'column',
-        justify: 'space-between',
-        alignItems: 'stretch',
-    },
-    paper: {
-        padding: theme.spacing(6),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-})); */
+function SearchByLink(props) {
+    const [resume, setResume] = useState(null);
 
-function SearchByLink() {
-    // const classes = useStyles();
+    const addResumeHandler = async (alternate_url) => {
+        try {
+            const response = await api.get(`/resume/${alternate_url}`);
+            //Пример: alternate_url = "https://hh.ru/resume/12345678901234567890123456789012abcdef"
+            if (response.statusText === 'OK') {
+                setResume(response.data);
+                props.history.push('/convertation');
+            } else {
+                alert(`Что-то пошло не так...`);
+            }
+        } catch (error) {
+            console.error('Could not fetch.', error.message);
+
+            alert(`Резюме с таким id не существует или недоступно.`);
+        }
+    };
+
+    console.log(resume);
 
     return (
         <>
-            <SearchForm message='Введите ссылку' title='https://hh.ru' />
+            <SearchForm
+                props={props}
+                message='Введите ссылку'
+                title='https://hh.ru'
+                addResumeHandler={addResumeHandler}
+            />
         </>
     );
 }

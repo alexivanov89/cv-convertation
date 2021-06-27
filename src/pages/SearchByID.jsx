@@ -1,27 +1,30 @@
-import React from 'react';
-import { makeStyles, Grid, Paper } from '@material-ui/core';
+import React, { useState } from 'react';
 import SearchForm from '../components/SearchForm';
+import api from '../utils/api';
 
-/* const useStyles = makeStyles((theme) => ({
-    root: {
-        flexGrow: 1,
-        direction: 'column',
-        justify: 'space-between',
-        alignItems: 'stretch',
-    },
-    paper: {
-        padding: theme.spacing(6),
-        textAlign: 'center',
-        color: theme.palette.text.secondary,
-    },
-})); */
+function SearchByID(props) {
+    const [resume, setResume] = useState(null);
 
-function SearchByID() {
-    // const classes = useStyles();
+    const addResumeHandler = async (resume_id) => {
+        try {
+            const response = await api.get(`/resumes/${resume_id}`);
+            if (response.statusText === 'OK') {
+                setResume(response.data);
+                props.history.push('/convertation');
+            } else {
+                alert(`Что-то пошло не так...`);
+            }
+        } catch (error) {
+            console.error('Could not fetch.', error.message);
 
+            alert(`Резюме с таким id не существует или недоступно.`);
+        }
+    };
+
+    console.log(resume);
     return (
         <>
-            <SearchForm message='Введите id' title='id' />
+            <SearchForm props={props} message='Введите id' title='id' addResumeHandler={addResumeHandler} />
         </>
     );
 }
