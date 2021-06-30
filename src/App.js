@@ -1,6 +1,5 @@
-import { useState } from 'react';
-import { AppBar, Container, Toolbar, makeStyles, Tabs, Tab, Grid, Paper } from '@material-ui/core';
-import { BrowserRouter as Router, Route, Redirect, Switch, Link } from 'react-router-dom';
+import { AppBar, Container, Toolbar, makeStyles, Grid, Paper } from '@material-ui/core';
+import { BrowserRouter as Router, Route, Redirect, Switch } from 'react-router-dom';
 
 import ConvertationResume from './pages/ConvertationResume';
 import SearchByID from './pages/SearchByID';
@@ -9,6 +8,7 @@ import DownloadResume from './pages/DownloadResume';
 import logo from './static/logo.png';
 
 import './App.css';
+import Nav from './components/Nav';
 
 const useStyles = makeStyles((theme) => ({
     header: {},
@@ -28,19 +28,10 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
         color: theme.palette.text.secondary,
     },
-    tab: {
-        // fontSize: 10,
-    },
 }));
 
 function App() {
     const classes = useStyles();
-
-    const [value, setValue] = useState(0);
-
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    };
 
     return (
         <>
@@ -55,28 +46,7 @@ function App() {
                                     </Grid>
                                     <Grid item xs={11}>
                                         <Toolbar>
-                                            <Tabs
-                                                value={value}
-                                                indicatorColor='secondary'
-                                                textColor='default'
-                                                onChange={handleChange}
-                                            >
-                                                <Tab
-                                                    className={classes.tab}
-                                                    label='Поиск по ID'
-                                                    component={Link}
-                                                    to='/'
-                                                />
-                                                <Tab label='Поиск по ссылке' component={Link} to='/searchbylink' />
-
-                                                <Tab
-                                                    label='Сконвертировать резюме'
-                                                    component={Link}
-                                                    to='/convertation'
-                                                />
-
-                                                <Tab label='Скачать резюме' component={Link} to='/download' />
-                                            </Tabs>
+                                            <Nav />
                                         </Toolbar>
                                     </Grid>
                                 </Grid>
@@ -84,7 +54,7 @@ function App() {
                         </Route>
 
                         <Switch>
-                            <Route exact path='/' render={(props) => <SearchByID {...props} />}></Route>
+                            <Route exact path='/' component={SearchByID}></Route>
                             <Route path='/searchbylink' component={SearchByLink}></Route>
                             <Route path='/convertation' component={ConvertationResume}></Route>
                             <Route path='/download' component={DownloadResume}></Route>

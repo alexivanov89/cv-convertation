@@ -20,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-export default function SearchForm({ props, message, title, addResumeHandler }) {
+export default function SearchForm({ message, title, addResumeHandler }) {
     const classes = useStyles();
     const [value, setValue] = useState('');
 
@@ -33,8 +33,6 @@ export default function SearchForm({ props, message, title, addResumeHandler }) 
         if (value) {
             addResumeHandler(value);
             setValue('');
-            console.log(value);
-            // props.history.push('/convertation');
         } else {
             alert(`Поле ввода не заполнено. Введите ${title}.`);
         }

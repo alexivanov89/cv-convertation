@@ -1,6 +1,9 @@
 import React from 'react';
+import FileDownload from 'js-file-download';
 import { Button, Grid, Typography } from '@material-ui/core';
 import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core/styles';
+import api from '../utils/api';
+import { useSelector } from 'react-redux';
 
 let theme = createMuiTheme({
     typography: {
@@ -34,6 +37,30 @@ const useStyles = makeStyles((theme) => ({
 
 function DownloadResume() {
     const classes = useStyles();
+    const resume = useSelector((state) => state.initialresume);
+
+    const downloadFile = async (type) => {
+        try {
+            const response = await api.get(`/download/${resume.id}?type=${type}`, { responseType: 'blob' });
+            if (response.statusText === 'OK') {
+                FileDownload(response.data, `Resume.${type}`);
+            } else {
+                alert(`Что-то пошло не так...`);
+            }
+        } catch (error) {
+            alert(`Произошла ошибка.`);
+        }
+    };
+
+    const handleSubmitJson = (e) => {
+        e.preventDefault();
+        downloadFile('json');
+    };
+
+    const handleSubmitDocx = (e) => {
+        e.preventDefault();
+        downloadFile('docx');
+    };
 
     return (
         <>
@@ -45,12 +72,22 @@ function DownloadResume() {
                         </ThemeProvider>
                     </Grid>
                     <Grid item xs={4}>
-                        <Button variant='contained' color='primary' className={classes.button}>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            className={classes.button}
+                            onClick={(e) => handleSubmitJson(e)}
+                        >
                             Скачать в JSON
                         </Button>
                     </Grid>
                     <Grid item xs={4}>
-                        <Button variant='contained' color='primary' className={classes.button}>
+                        <Button
+                            variant='contained'
+                            color='primary'
+                            className={classes.button}
+                            onClick={(e) => handleSubmitDocx(e)}
+                        >
                             Скачать в DOCX
                         </Button>
                     </Grid>
